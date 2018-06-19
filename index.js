@@ -4,7 +4,7 @@ let conn = null
 waitTime = 20000
 
 let doConnect = () => {
-    conn = new esl.Connection('192.168.0.110', 8021, 'ClueCon', function() {
+    conn = new esl.Connection('127.0.0.1', 8021, 'ClueCon', function() {
         conn.events('json', 'all')
         //conn.api('status', function(res) {
         //    //res is an esl.Event instance
