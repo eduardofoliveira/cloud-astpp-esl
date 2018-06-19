@@ -1,0 +1,15 @@
+{
+  "name": "freeswitch-esl",
+  "version": "1.0.0",
+  "description": "Freeswitch Interface Esl para obter usuario e centro de custo",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": ["Cloudcom", "Freeswitch", "esl"],
+  "author": "Eduardo F Oliveira",
+  "license": "ISC",
+  "dependencies": {
+    "modesl": "^1.2.0"
+  }
+}
