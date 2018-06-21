@@ -15,7 +15,7 @@ waitTime = 20000
 let doConnect = () => {
     conn = new esl.Connection('127.0.0.1', 8021, 'ClueCon', function() {
         conn.events('json', 'all')
-    
+
         conn.on('esl::event::CHANNEL_HANGUP_COMPLETE::*', function(e) {
             if(e.getHeader('Call-Direction') == 'inbound'){
 
@@ -25,6 +25,7 @@ let doConnect = () => {
                     insert = [e.getHeader('Unique-ID'), e.getHeader('variable_sip_contact_user'), e.getHeader('variable_sip_h_P-CostCenter')]
                 }
                 
+                console.log(e)
 
                 pool.query('INSERT INTO astpp_basix (uniqueid, user, cost_center) values (?)', [insert], (error, results) => {
                     if(error){
