@@ -1,4 +1,13 @@
 const esl = require('modesl')
+const mysql = require('mysql')
+
+const pool = mysql.createPool({
+    connectionLimit : 10,
+    host:'54.233.223.179',
+    user: 'root',
+    password: '190790edu',
+    database: 'astpp'
+})
 
 let conn = null
 waitTime = 20000
@@ -6,43 +15,17 @@ waitTime = 20000
 let doConnect = () => {
     conn = new esl.Connection('127.0.0.1', 8021, 'ClueCon', function() {
         conn.events('json', 'all')
-        //conn.api('status', function(res) {
-        //    //res is an esl.Event instance
-        //    console.log(res.getBody())
-        //})
-        /*conn.on('esl::event::**', function(e) {
-            console.log(e.getHeader('Event-Name'))
-            console.log(e.getHeader('Core-UUID'))
-            console.log(e.getHeader('Unique-ID'))
-            console.log(e.getHeader('variable_sip_call_id'))
-            console.log('')
-        })*/
     
         conn.on('esl::event::CHANNEL_HANGUP_COMPLETE::*', function(e) {
             if(e.getHeader('Call-Direction') == 'inbound'){
 
-                console.log(e.getHeader('Unique-ID'))
-                console.log(e.getHeader('variable_sip_call_id'))
-                console.log(e.getHeader('Hangup-Cause'))
-                console.log(e.getHeader('variable_sip_hangup_disposition'))
-                console.log(e.getHeader('Caller-Caller-ID-Name'))
-                console.log(e.getHeader('Caller-Caller-ID-Number'))
-                console.log(e.getHeader('variable_sip_contact_user'))
-                console.log(e.getHeader('variable_sip_from_host'))
-                console.log(e.getHeader('variable_sip_h_P-CostCenter'))
-                console.log(e.getHeader('variable_last_arg'))
+                insert = [e.getHeader('Unique-ID'), e.getHeader('variable_sip_contact_user'), e.getHeader('variable_sip_h_P-CostCenter')]
 
-                if(e.getHeader('variable_sip_hangup_disposition') == 'recv_bye'){
-                    console.log('Originador Desligou')
-                }else{
-                    console.log('Destino Desligou')
-                }
-
-                //e.headers.forEach(item => {
-                //    console.log(item)
-                //})
-
-                console.log('')
+                pool.query('INSERT INTO astpp_basix (uniqueid, user, cost_center) values ?', [insert], (error, results) => {
+                    if(error){
+                        console.error(insert)
+                    }
+                })
             }
         })
 
