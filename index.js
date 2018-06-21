@@ -25,7 +25,7 @@ let doConnect = () => {
                     insert = [e.getHeader('Unique-ID'), e.getHeader('variable_sip_contact_user'), e.getHeader('variable_sip_h_P-CostCenter')]
                 }
                 
-                console.log(e)
+                //console.log(e)
 
                 pool.query('INSERT INTO astpp_basix (uniqueid, user, cost_center) values (?)', [insert], (error, results) => {
                     if(error){
