@@ -3,9 +3,9 @@ const mysql = require('mysql')
 
 const pool = mysql.createPool({
     connectionLimit : 10,
-    host:'54.233.223.179',
+    host:'127.0.0.1',
     user: 'root',
-    password: '190790edu',
+    password: '5d5rBFA2bNugYDss',
     database: 'astpp'
 })
 
@@ -19,11 +19,17 @@ let doConnect = () => {
         conn.on('esl::event::CHANNEL_HANGUP_COMPLETE::*', function(e) {
             if(e.getHeader('Call-Direction') == 'inbound'){
 
-                insert = [e.getHeader('Unique-ID'), e.getHeader('variable_sip_contact_user'), e.getHeader('variable_sip_h_P-CostCenter')]
+                if(e.getHeader('variable_sip_h_P-CostCenter')){
+                    insert = [e.getHeader('Unique-ID'), e.getHeader('variable_sip_contact_user'), '']
+                }else{
+                    insert = [e.getHeader('Unique-ID'), e.getHeader('variable_sip_contact_user'), e.getHeader('variable_sip_h_P-CostCenter')]
+                }
+                
 
                 pool.query('INSERT INTO astpp_basix (uniqueid, user, cost_center) values ?', [insert], (error, results) => {
                     if(error){
                         console.error(insert)
+                        console.error(error)
                     }
                 })
             }
