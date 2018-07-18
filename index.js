@@ -23,10 +23,10 @@ let doConnect = () => {
 
                 if(e.getHeader('variable_sip_h_P-CostCenter')){
                     console.log('Sem:' +  e.getHeader('variable_sip_h_P-CostCenter'))
-                    insert = [e.getHeader('Unique-ID'), e.getHeader('variable_sip_contact_user'), '']
+                    insert = [e.getHeader('Unique-ID'), e.getHeader('variable_sip_contact_user'), e.getHeader('variable_sip_h_P-CostCenter')]
                 }else{
                     console.log('Com:' +  e.getHeader('variable_sip_h_P-CostCenter'))
-                    insert = [e.getHeader('Unique-ID'), e.getHeader('variable_sip_contact_user'), e.getHeader('variable_sip_h_P-CostCenter')]
+                    insert = [e.getHeader('Unique-ID'), e.getHeader('variable_sip_contact_user'), '']
                 }
                 
                 //console.log(e)
