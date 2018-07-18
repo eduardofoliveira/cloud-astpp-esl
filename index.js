@@ -19,11 +19,13 @@ let doConnect = () => {
         conn.on('esl::event::CHANNEL_HANGUP_COMPLETE::*', function(e) {
             if(e.getHeader('Call-Direction') == 'inbound' && (e.getHeader('Caller-Network-Addr') == '200.225.81.77' || e.getHeader('Caller-Network-Addr') == '18.217.251.102')){
 
-                console.log(e.getHeader('variable_sip_h_P-CostCenter'))
+                console.log('Antes:' +  e.getHeader('variable_sip_h_P-CostCenter'))
 
                 if(e.getHeader('variable_sip_h_P-CostCenter')){
+                    console.log('Sem:' +  e.getHeader('variable_sip_h_P-CostCenter'))
                     insert = [e.getHeader('Unique-ID'), e.getHeader('variable_sip_contact_user'), '']
                 }else{
+                    console.log('Com:' +  e.getHeader('variable_sip_h_P-CostCenter'))
                     insert = [e.getHeader('Unique-ID'), e.getHeader('variable_sip_contact_user'), e.getHeader('variable_sip_h_P-CostCenter')]
                 }
                 
