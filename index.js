@@ -12,6 +12,14 @@ const pool = mysql.createPool({
 let conn = null
 waitTime = 20000
 
+function forceGC(){
+    if (global.gc) {
+       global.gc();
+    } else {
+       console.warn('No GC hook! Start your program as `node --expose-gc file.js`.');
+    }
+ }
+
 let doConnect = () => {
     conn = new esl.Connection('127.0.0.1', 8021, 'ClueCon', function() {
         conn.events('json', 'all')
@@ -34,6 +42,8 @@ let doConnect = () => {
                         console.error(insert)
                         console.error(error)
                     }
+
+                    forceGC()
                 })
             }
         })
