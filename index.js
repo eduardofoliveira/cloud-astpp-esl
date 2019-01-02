@@ -24,6 +24,15 @@ let doConnect = () => {
     conn = new esl.Connection('127.0.0.1', 8021, 'ClueCon', function() {
         conn.events('json', 'all')
 
+        conn.on('esl::event::CALL_UPDATE::*', (event) => {
+            console.log(event.getHeader('Core-UUID'))
+            console.log(event.getHeader('Caller-Network-Addr'))
+            console.log(event.getHeader('Caller-Caller-ID-Number'))
+            console.log(event.getHeader('Caller-Callee-ID-Number'))
+            console.log('')
+            //console.log(event)
+        })
+
         conn.on('esl::event::CHANNEL_HANGUP_COMPLETE::*', function(e) {
             if(e.getHeader('Call-Direction') == 'inbound' && (e.getHeader('Caller-Network-Addr') == '200.225.81.77' || e.getHeader('Caller-Network-Addr') == '18.217.251.102')){
                 let insert = null
