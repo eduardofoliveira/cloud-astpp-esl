@@ -37,12 +37,12 @@ let doConnect = () => {
         })
 
         conn.on('esl::event::CHANNEL_HANGUP_COMPLETE::*', function(e) {
-            if(event.getHeader('Caller-Network-Addr') === '187.32.166.162'){
+            if(e.getHeader('Caller-Network-Addr') === '187.32.166.162'){
                 console.log('Chamada Locus Desconectada')
-                console.log(event.getHeader('Core-UUID'))
-                console.log(event.getHeader('Caller-Network-Addr'))
-                console.log(event.getHeader('Caller-Caller-ID-Number'))
-                console.log(event.getHeader('Caller-Callee-ID-Number'))
+                console.log(e.getHeader('Core-UUID'))
+                console.log(e.getHeader('Caller-Network-Addr'))
+                console.log(e.getHeader('Caller-Caller-ID-Number'))
+                console.log(e.getHeader('Caller-Callee-ID-Number'))
                 console.log('')
             }
 
