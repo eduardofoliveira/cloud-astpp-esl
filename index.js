@@ -25,11 +25,14 @@ let doConnect = () => {
         conn.events('json', 'all')
 
         conn.on('esl::event::CALL_UPDATE::*', (event) => {
-            console.log(event.getHeader('Core-UUID'))
-            console.log(event.getHeader('Caller-Network-Addr'))
-            console.log(event.getHeader('Caller-Caller-ID-Number'))
-            console.log(event.getHeader('Caller-Callee-ID-Number'))
-            console.log('')
+            if(event.getHeader('Caller-Network-Addr') === '187.32.166.162'){
+                console.log('Chamada Locus Conectada')
+                console.log(event.getHeader('Core-UUID'))
+                console.log(event.getHeader('Caller-Network-Addr'))
+                console.log(event.getHeader('Caller-Caller-ID-Number'))
+                console.log(event.getHeader('Caller-Callee-ID-Number'))
+                console.log('')
+            }
             //console.log(event)
         })
 
