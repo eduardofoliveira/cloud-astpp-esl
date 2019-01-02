@@ -2,7 +2,7 @@ const esl = require('modesl')
 const mysql = require('mysql')
 
 const pool = mysql.createPool({
-    connectionLimit : 1,
+    connectionLimit : 3,
     host:'127.0.0.1',
     user: 'root',
     password: '5d5rBFA2bNugYDss',
@@ -37,14 +37,14 @@ let doConnect = () => {
         })
 
         conn.on('esl::event::CHANNEL_HANGUP_COMPLETE::*', function(e) {
-            /*if(event.getHeader('Caller-Network-Addr') === '187.32.166.162'){
+            if(event.getHeader('Caller-Network-Addr') === '187.32.166.162'){
                 console.log('Chamada Locus Desconectada')
                 console.log(event.getHeader('Core-UUID'))
                 console.log(event.getHeader('Caller-Network-Addr'))
                 console.log(event.getHeader('Caller-Caller-ID-Number'))
                 console.log(event.getHeader('Caller-Callee-ID-Number'))
                 console.log('')
-            }*/
+            }
 
             if(e.getHeader('Call-Direction') == 'inbound' && (e.getHeader('Caller-Network-Addr') == '200.225.81.77' || e.getHeader('Caller-Network-Addr') == '18.217.251.102')){
                 let insert = null
