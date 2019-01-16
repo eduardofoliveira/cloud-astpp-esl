@@ -26,19 +26,16 @@ let doConnect = () => {
         conn.events('json', 'all')
 
         conn.on('esl::event::CHANNEL_CREATE::**', (event) => {
-            if(event.getHeader('Caller-Network-Addr') === '187.32.166.162'){
+            if(event.getHeader('Caller-Network-Addr') === '187.32.166.162' && event.getHeader('Call-Direction' === 'outbound')){
 
-                console.log(event)
-                console.log('')
-
-                /*let call = {
-                    evento: event.getHeader('Event-Name'),
+                let call = {
+                    evento: event.getHeader('Answer-State'),
                     callid: event.getHeader('Channel-Call-UUID'),
-                    from: event.getHeader('Other-Leg-Caller-ID-Number'),
-                    to: event.getHeader('Other-Leg-Callee-ID-Number')
+                    from: event.getHeader('Caller-Caller-ID-Number'),
+                    to: event.getHeader('Caller-Destination-Number')
                 }
 
-                axios.post('http://18.228.130.32/chamada/locus', {call})*/
+                axios.post('http://18.228.130.32/chamada/locus', {call})
             }
         })
 
