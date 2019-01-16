@@ -25,7 +25,7 @@ let doConnect = () => {
     conn = new esl.Connection('127.0.0.1', 8021, 'ClueCon', function() {
         conn.events('json', 'all')
 
-        conn.on('esl::event::CHANNEL_CREATE:**', (event) => {
+        conn.on('esl::event::CHANNEL_CREATE::**', (event) => {
             if(event.getHeader('Caller-Network-Addr') === '187.32.166.162'){
 
                 console.log(event)
