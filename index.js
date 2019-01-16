@@ -26,7 +26,7 @@ let doConnect = () => {
         conn.events('json', 'all')
 
         conn.on('esl::event::CHANNEL_CREATE::**', (event) => {
-            if(event.getHeader('Caller-Network-Addr') === '187.32.166.162' && event.getHeader('Call-Direction' === 'outbound')){
+            if(event.getHeader('Caller-Network-Addr') === '187.32.166.162' && event.getHeader('Call-Direction') === 'outbound'){
 
                 let call = {
                     evento: event.getHeader('Answer-State'),
