@@ -26,7 +26,7 @@ let doConnect = () => {
         conn.events('json', 'all')
 
         conn.on('esl::event::**', (event) => {
-            if(event.getHeader('Caller-Network-Addr') === '187.32.166.16'){
+            if(event.getHeader('Caller-Network-Addr') === '187.32.166.162'){
 
                 console.log(event.getHeader('Event-Name'))
                 console.log(event.getHeader('Channel-Call-UUID'))
