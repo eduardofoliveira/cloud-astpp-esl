@@ -27,14 +27,17 @@ let doConnect = () => {
 
         conn.on('esl::event::**::**', (event) => {
             if(event.getHeader('Caller-Network-Addr') === '187.32.166.162'){
-                let call = {
+
+                console.log(event.getHeader('Event-Name'))
+
+                /*let call = {
                     evento: event.getHeader('Event-Name'),
                     callid: event.getHeader('Channel-Call-UUID'),
                     from: event.getHeader('Other-Leg-Caller-ID-Number'),
                     to: event.getHeader('Other-Leg-Callee-ID-Number')
                 }
 
-                axios.post('http://18.228.130.32/chamada/locus', {call})
+                axios.post('http://18.228.130.32/chamada/locus', {call})*/
             }
         })
 
