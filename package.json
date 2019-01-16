@@ -14,6 +14,7 @@
   "author": "Eduardo F Oliveira",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "modesl": "^1.2.0",
     "mysql": "^2.15.0"
   }

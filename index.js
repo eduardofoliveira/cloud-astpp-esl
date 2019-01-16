@@ -1,5 +1,6 @@
 const esl = require('modesl')
 const mysql = require('mysql')
+const axios = require('axios')
 
 const pool = mysql.createPool({
     connectionLimit : 3,
@@ -18,32 +19,35 @@ function forceGC(){
     } else {
        console.warn('No GC hook! Start your program as `node --expose-gc file.js`.');
     }
- }
+}
 
 let doConnect = () => {
     conn = new esl.Connection('127.0.0.1', 8021, 'ClueCon', function() {
         conn.events('json', 'all')
 
-        conn.on('esl::event::CALL_UPDATE::*', (event) => {
+        conn.on('esl::event::CHANNEL_BRIDGE::*', (event) => {
             if(event.getHeader('Caller-Network-Addr') === '187.32.166.162'){
-                console.log('Chamada Locus Conectada')
-                console.log(event.getHeader('Channel-Call-UUID'))
-                console.log(event.getHeader('Caller-Network-Addr'))
-                console.log(event.getHeader('Caller-Caller-ID-Number'))
-                console.log(event.getHeader('Caller-Callee-ID-Number'))
-                console.log('')
+                let call = {
+                    evento: event.getHeader('Event-Name'),
+                    callid: event.getHeader('Channel-Call-UUID'),
+                    from: event.getHeader('Other-Leg-Caller-ID-Number'),
+                    to: event.getHeader('Other-Leg-Callee-ID-Number')
+                }
+
+                axios.post('http://http://18.228.130.32/chamada/locus', {call})
             }
-            //console.log(event)
         })
 
         conn.on('esl::event::CHANNEL_HANGUP_COMPLETE::*', function(e) {
             if(e.getHeader('Caller-Network-Addr') === '187.32.166.162'){
-                console.log('Chamada Locus Desconectada')
-                console.log(e.getHeader('Channel-Call-UUID'))
-                console.log(e.getHeader('Caller-Network-Addr'))
-                console.log(e.getHeader('Caller-Caller-ID-Number'))
-                console.log(e.getHeader('Caller-Callee-ID-Number'))
-                console.log('')
+                let call = {
+                    evento: event.getHeader('Event-Name'),
+                    callid: event.getHeader('Channel-Call-UUID'),
+                    from: event.getHeader('Other-Leg-Caller-ID-Number'),
+                    to: event.getHeader('Other-Leg-Callee-ID-Number')
+                }
+
+                axios.post('http://http://18.228.130.32/chamada/locus', {call})
             }
 
             if(e.getHeader('Call-Direction') == 'inbound' && (e.getHeader('Caller-Network-Addr') == '200.225.81.77' || e.getHeader('Caller-Network-Addr') == '18.217.251.102')){
