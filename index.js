@@ -35,6 +35,7 @@ let doConnect = () => {
                     to: event.getHeader('Caller-Destination-Number')
                 }
 
+                console.log('send post - ringing')
                 axios.post('http://18.228.130.32/chamada/locus', {call})
             }
         })
@@ -48,6 +49,7 @@ let doConnect = () => {
                     to: e.getHeader('Other-Leg-Callee-ID-Number')
                 }
 
+                console.log('send post - endcall')
                 axios.post('http://18.228.130.32/chamada/locus', {call})
             }
 
