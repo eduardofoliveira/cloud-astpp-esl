@@ -41,10 +41,10 @@ let doConnect = () => {
         conn.on('esl::event::CHANNEL_HANGUP_COMPLETE::*', function(e) {
             if(e.getHeader('Caller-Network-Addr') === '187.32.166.162'){
                 let call = {
-                    evento: event.getHeader('Event-Name'),
-                    callid: event.getHeader('Channel-Call-UUID'),
-                    from: event.getHeader('Other-Leg-Caller-ID-Number'),
-                    to: event.getHeader('Other-Leg-Callee-ID-Number')
+                    evento: e.getHeader('Event-Name'),
+                    callid: e.getHeader('Channel-Call-UUID'),
+                    from: e.getHeader('Other-Leg-Caller-ID-Number'),
+                    to: e.getHeader('Other-Leg-Callee-ID-Number')
                 }
 
                 axios.post('http://18.228.130.32/chamada/locus', {call})
