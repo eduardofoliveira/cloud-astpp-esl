@@ -36,7 +36,7 @@ let doConnect = () => {
                 }
 
                 console.log('send post - ringing')
-                axios.post('http://18.228.130.32/chamada/locus', {call})
+                axios.post('http://contact.cloudcom.com.br/chamada/locus', {call})
             }
         })
 
@@ -50,7 +50,7 @@ let doConnect = () => {
                 }
 
                 console.log('send post - endcall')
-                axios.post('http://18.228.130.32/chamada/locus', {call})
+                axios.post('http://contact.cloudcom.com.br/chamada/locus', {call})
             }
 
             if(e.getHeader('Call-Direction') == 'inbound' && (e.getHeader('Caller-Network-Addr') == '200.225.81.77' || e.getHeader('Caller-Network-Addr') == '18.217.251.102')){
