@@ -28,21 +28,24 @@ let doConnect = () => {
     conn.events("json", "CHANNEL_HANGUP_COMPLETE");
 
     conn.on("esl::event::CHANNEL_HANGUP_COMPLETE::**", function(e) {
-      console.log(JSON.stringify(e.headers));
-
       if (
         e.getHeader("Call-Direction") == "inbound" &&
         e.getHeader("Caller-Network-Addr") == "54.207.81.171"
       ) {
         let insert = null;
 
-        if (e.getHeader("variable_sip_h_P-CostCenter")) {
+        if (
+          e.getHeader("variable_sip_h_P-CostCenter") &&
+          e.getHeader("variable_sip_h_P-Basix-User")
+        ) {
           insert = [
             e.getHeader("Unique-ID"),
             e.getHeader("variable_sip_h_P-Basix-User"),
             e.getHeader("variable_sip_h_P-CostCenter")
           ];
-        } else {
+        }
+
+        if (e.getHeader("variable_sip_h_P-Basix-User")) {
           insert = [
             e.getHeader("Unique-ID"),
             e.getHeader("variable_sip_h_P-Basix-User"),
