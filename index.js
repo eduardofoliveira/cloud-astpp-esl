@@ -30,21 +30,20 @@ let doConnect = () => {
     conn.on("esl::event::CHANNEL_HANGUP_COMPLETE::**", function(e) {
       if (
         e.getHeader("Call-Direction") == "inbound" &&
-        (e.getHeader("Caller-Network-Addr") == "200.225.81.77" ||
-          e.getHeader("Caller-Network-Addr") == "18.217.251.102")
+        e.getHeader("Caller-Network-Addr") == "54.207.81.171"
       ) {
         let insert = null;
 
         if (e.getHeader("variable_sip_h_P-CostCenter")) {
           insert = [
             e.getHeader("Unique-ID"),
-            e.getHeader("variable_sip_contact_user"),
+            e.getHeader("variable_sip_h_P-Basix-User"),
             e.getHeader("variable_sip_h_P-CostCenter")
           ];
         } else {
           insert = [
             e.getHeader("Unique-ID"),
-            e.getHeader("variable_sip_contact_user"),
+            e.getHeader("variable_sip_h_P-Basix-User"),
             ""
           ];
         }
