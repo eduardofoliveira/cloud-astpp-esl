@@ -28,7 +28,7 @@ let doConnect = () => {
     conn.events("json", "CHANNEL_HANGUP_COMPLETE");
 
     conn.on("esl::event::CHANNEL_HANGUP_COMPLETE::**", function(e) {
-      console.log(e);
+      console.log(e.headers);
 
       if (
         e.getHeader("Call-Direction") == "inbound" &&
