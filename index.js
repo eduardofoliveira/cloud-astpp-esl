@@ -1,100 +1,87 @@
-const esl = require('modesl')
-const mysql = require('mysql')
-const axios = require('axios')
+const esl = require("modesl");
+const mysql = require("mysql");
 
 const pool = mysql.createPool({
-    connectionLimit : 3,
-    host:'127.0.0.1',
-    user: 'root',
-    password: '5d5rBFA2bNugYDss',
-    database: 'astpp'
-})
+  connectionLimit: 3,
+  host: "127.0.0.1",
+  user: "root",
+  password: "5d5rBFA2bNugYDss",
+  database: "astpp"
+});
 
-let conn = null
-waitTime = 20000
+let conn = null;
+waitTime = 20000;
 
-function forceGC(){
-    if (global.gc) {
-       global.gc();
-    } else {
-       console.warn('No GC hook! Start your program as `node --expose-gc file.js`.');
-    }
+function forceGC() {
+  if (global.gc) {
+    global.gc();
+  } else {
+    console.warn(
+      "No GC hook! Start your program as `node --expose-gc file.js`."
+    );
+  }
 }
 
 let doConnect = () => {
-    conn = new esl.Connection('127.0.0.1', 8021, 'ClueCon', function() {
-        conn.events('json', 'all')
+  conn = new esl.Connection("127.0.0.1", 8021, "ClueCon", function() {
+    conn.events("json", "all");
 
-        conn.on('esl::event::CHANNEL_CREATE::**', (event) => {
-            if((event.getHeader('Caller-Network-Addr') === '187.32.166.162' || event.getHeader('Caller-Network-Addr') === '189.8.83.10') && event.getHeader('Call-Direction') === 'outbound'){
+    conn.on("esl::event::CHANNEL_HANGUP_COMPLETE::**", function(e) {
+      if (
+        e.getHeader("Call-Direction") == "inbound" &&
+        (e.getHeader("Caller-Network-Addr") == "200.225.81.77" ||
+          e.getHeader("Caller-Network-Addr") == "18.217.251.102")
+      ) {
+        let insert = null;
 
-                let call = {
-                    evento: event.getHeader('Answer-State'),
-                    callid: event.getHeader('Channel-Call-UUID'),
-                    from: event.getHeader('Caller-Caller-ID-Number'),
-                    to: event.getHeader('Caller-Destination-Number')
-                }
+        if (e.getHeader("variable_sip_h_P-CostCenter")) {
+          insert = [
+            e.getHeader("Unique-ID"),
+            e.getHeader("variable_sip_contact_user"),
+            e.getHeader("variable_sip_h_P-CostCenter")
+          ];
+        } else {
+          insert = [
+            e.getHeader("Unique-ID"),
+            e.getHeader("variable_sip_contact_user"),
+            ""
+          ];
+        }
 
-                console.log('send post - ringing')
-                axios.post('http://contact.cloudcom.com.br/chamada/locus', {call})
+        pool.query(
+          "INSERT INTO astpp_basix (uniqueid, user, cost_center) values (?)",
+          [insert],
+          (error, results) => {
+            if (error) {
+              console.error(insert);
+              console.error(error);
             }
-        })
 
-        conn.on('esl::event::CHANNEL_HANGUP_COMPLETE::**', function(e) {
-            if(e.getHeader('Caller-Network-Addr') === '187.32.166.162' || e.getHeader('Caller-Network-Addr') === '189.8.83.10'){
-                let call = {
-                    evento: e.getHeader('Event-Name'),
-                    callid: e.getHeader('Channel-Call-UUID'),
-                    from: e.getHeader('Other-Leg-Caller-ID-Number'),
-                    to: e.getHeader('Other-Leg-Callee-ID-Number')
-                }
+            //forceGC();
+          }
+        );
+      }
+    });
 
-                console.log('send post - endcall')
-                axios.post('http://contact.cloudcom.com.br/chamada/locus', {call})
-            }
+    conn.on("error", error => {
+      console.log("caiu");
+      let data = new Date();
+      console.log(`${error.code} - ${data.toLocaleString()}`);
+      setTimeout(doConnect, waitTime);
+    });
 
-            if(e.getHeader('Call-Direction') == 'inbound' && (e.getHeader('Caller-Network-Addr') == '200.225.81.77' || e.getHeader('Caller-Network-Addr') == '18.217.251.102')){
-                let insert = null
+    conn.on("esl::event::disconnect::notice", () => {
+      let data = new Date();
+      console.log(`desconectou - ${data.toLocaleString()}`);
+      setTimeout(doConnect, waitTime);
+    });
+  });
+};
 
+doConnect();
 
-                if(e.getHeader('variable_sip_h_P-CostCenter')){
-                    insert = [e.getHeader('Unique-ID'), e.getHeader('variable_sip_contact_user'), e.getHeader('variable_sip_h_P-CostCenter')]
-                }else{
-                    insert = [e.getHeader('Unique-ID'), e.getHeader('variable_sip_contact_user'), '']
-                }
-                
-                //console.log(e)
-
-                pool.query('INSERT INTO astpp_basix (uniqueid, user, cost_center) values (?)', [insert], (error, results) => {
-                    if(error){
-                        console.error(insert)
-                        console.error(error)
-                    }
-
-                    forceGC()
-                })
-            }
-        })
-
-        conn.on('error', (error) => {
-            console.log('caiu')
-            let data = new Date()
-            console.log(`${error.code} - ${data.toLocaleString()}`)
-            setTimeout(doConnect, waitTime)
-        })
-
-        conn.on('esl::event::disconnect::notice', () => {
-            let data = new Date()
-            console.log(`desconectou - ${data.toLocaleString()}`)
-            setTimeout(doConnect, waitTime)
-        })
-    })
-}
-
-doConnect()
-
-process.on('uncaughtException', function (err) {
-    let data = new Date()
-    console.log(`${err.code} - ${data.toLocaleString()}`)
-    setTimeout(doConnect, waitTime)
-})
+process.on("uncaughtException", function(err) {
+  let data = new Date();
+  console.log(`${err.code} - ${data.toLocaleString()}`);
+  setTimeout(doConnect, waitTime);
+});
