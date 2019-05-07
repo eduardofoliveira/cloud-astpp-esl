@@ -52,8 +52,6 @@ let doConnect = () => {
               console.error(error);
             }
 
-            console.log(insert);
-
             //forceGC();
           }
         );
