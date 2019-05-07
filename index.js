@@ -34,27 +34,15 @@ let doConnect = () => {
       ) {
         let insert = null;
 
-        console.log(e.getHeader("variable_sip_h_P-CostCenter"))
-        console.log(e.getHeader("variable_sip_h_P-Basix-User"))
-        console.log('')
+        const centroCusto = e.getHeader("variable_sip_h_P-CostCenter");
+        const userBasix = e.getHeader("variable_sip_h_P-Basix-User");
 
-        if (
-          e.getHeader("variable_sip_h_P-CostCenter") &&
-          e.getHeader("variable_sip_h_P-Basix-User")
-        ) {
-          insert = [
-            e.getHeader("Unique-ID"),
-            e.getHeader("variable_sip_h_P-Basix-User"),
-            e.getHeader("variable_sip_h_P-CostCenter")
-          ];
+        if (centroCusto && userBasix) {
+          insert = [e.getHeader("Unique-ID"), userBasix, centroCusto];
         }
 
-        if (e.getHeader("variable_sip_h_P-Basix-User")) {
-          insert = [
-            e.getHeader("Unique-ID"),
-            e.getHeader("variable_sip_h_P-Basix-User"),
-            ""
-          ];
+        if (userBasix) {
+          insert = [e.getHeader("Unique-ID"), userBasix, ""];
         }
 
         pool.query(
@@ -65,6 +53,8 @@ let doConnect = () => {
               console.error(insert);
               console.error(error);
             }
+
+            console.log(insert);
 
             //forceGC();
           }
