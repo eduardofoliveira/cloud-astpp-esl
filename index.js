@@ -34,6 +34,10 @@ let doConnect = () => {
       ) {
         let insert = null;
 
+        console.log(e.getHeader("variable_sip_h_P-CostCenter"))
+        console.log(e.getHeader("variable_sip_h_P-Basix-User"))
+        console.log('')
+
         if (
           e.getHeader("variable_sip_h_P-CostCenter") &&
           e.getHeader("variable_sip_h_P-Basix-User")
