@@ -39,9 +39,7 @@ let doConnect = () => {
 
         if (centroCusto && userBasix) {
           insert = [e.getHeader("Unique-ID"), userBasix, centroCusto];
-        }
-
-        if (userBasix) {
+        } else {
           insert = [e.getHeader("Unique-ID"), userBasix, ""];
         }
 
