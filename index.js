@@ -43,18 +43,21 @@ let doConnect = () => {
           insert = [e.getHeader("Unique-ID"), userBasix, ""];
         }
 
-        pool.query(
-          "INSERT INTO astpp_basix (uniqueid, user, cost_center) values (?)",
-          [insert],
-          (error, results) => {
-            if (error) {
-              console.error(insert);
-              console.error(error);
+        if(userBasix){
+          pool.query(
+            "INSERT INTO astpp_basix (uniqueid, user, cost_center) values (?)",
+            [insert],
+            (error, results) => {
+              if (error) {
+                console.error(insert);
+                console.error(error);
+              }
+  
+              //forceGC();
             }
+          );
+        }
 
-            //forceGC();
-          }
-        );
       }
     });
 
