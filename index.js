@@ -30,7 +30,9 @@ let doConnect = () => {
     conn.on("esl::event::CHANNEL_HANGUP_COMPLETE::**", function(e) {
       if (
         e.getHeader("Call-Direction") == "inbound" &&
-        e.getHeader("Caller-Network-Addr") == "54.207.81.171"
+        e.getHeader("Caller-Network-Addr") == "54.207.81.171" ||
+        e.getHeader("Call-Direction") == "inbound" &&
+        e.getHeader("Caller-Network-Addr") == "18.217.251.102"
       ) {
         let insert = null;
 
